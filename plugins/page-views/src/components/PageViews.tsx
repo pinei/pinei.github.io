@@ -19,16 +19,21 @@ const PageViews: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
 
 PageViews.css = `
 .page-views {
-  color: var(--gray);
-  font-size: 0.8rem;
+  color: var(--darkgray);
 }
 `
 
 // Plain browser JS (ported from v4 goatcounter.inline.ts). Runs on every SPA nav.
+// Moves the span into .content-meta so it appears inline after reading time (v4 behaviour).
 PageViews.afterDOMLoaded = `
 document.addEventListener("nav", () => {
   const el = document.querySelector("#page-views")
   if (!el) return
+
+  // Graft into .content-meta so the comma CSS makes it read "2 min read, 12 views"
+  const meta = document.querySelector(".content-meta")
+  if (meta && !meta.contains(el)) meta.appendChild(el)
+
   const gc = window.goatcounter
   const path = (gc && gc.get_data && gc.get_data().p) || location.pathname
   fetch("https://pinei.goatcounter.com/counter/" + encodeURIComponent(path) + ".json")
