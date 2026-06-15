@@ -160,7 +160,7 @@ a {
 }
 
 .page {
-  max-width: calc(#{map.get($breakpoints, desktop)} + 300px);
+  max-width: calc(#{map.get($breakpoints, desktop)} + 700px); // @hortus wider content area
   margin: 0 auto;
   & article {
     & > h1 {
@@ -234,7 +234,7 @@ a {
       flex-direction: column;
       @media all and ($mobile) {
         gap: 0;
-        align-items: center;
+        /* align-items: center; */ // @hortus left-align logo + items on mobile
         position: initial;
         display: flex;
         height: unset;

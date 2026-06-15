@@ -1,3 +1,16 @@
 @use "./variables.scss" as *;
 
 // put your custom CSS here!
+
+// @hortus the page title sits directly under the Logo (added to the left sidebar)
+.page-title {
+  margin-top: -2rem;
+  align-self: center;
+}
+
+// @hortus on mobile the Logo replaces the textual page title (ported from v4 PageTitle.tsx)
+@media (max-width: 800px) {
+  .page-title {
+    display: none;
+  }
+}

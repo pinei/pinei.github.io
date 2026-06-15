@@ -192,6 +192,10 @@ ${stylesheet.join("\n\n")}
   --headerFont: "${getFontSpecificationName(theme.typography.header)}", ${DEFAULT_SANS_SERIF};
   --bodyFont: "${getFontSpecificationName(theme.typography.body)}", ${DEFAULT_SANS_SERIF};
   --codeFont: "${getFontSpecificationName(theme.typography.code)}", ${DEFAULT_MONO};
+
+  /* @hortus brand colors (consumed by the Logo plugin) */
+  --primaryGreen: rgb(48, 96, 48);
+  --secondaryGreen: rgb(48, 208, 48);
 }
 
 :root[saved-theme="dark"] {
@@ -204,6 +208,10 @@ ${stylesheet.join("\n\n")}
   --tertiary: ${theme.colors.darkMode.tertiary};
   --highlight: ${theme.colors.darkMode.highlight};
   --textHighlight: ${theme.colors.darkMode.textHighlight};
+
+  /* @hortus brand colors (consumed by the Logo plugin) — v4 typo --privaryGreen fixed */
+  --primaryGreen: #81c784;
+  --secondaryGreen: #4caf50;
 }
 
 :root {
