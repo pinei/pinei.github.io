@@ -83,6 +83,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Local plugins (plugins/*/) are gitignored — dist/ must be built in CI.
+      # This runs before `plugin install` so the symlinks Quartz creates point to a
+      # dist/ that already exists. The local-plugins cache makes this fast on repeat runs.
+      - name: Build local plugins
+        run: |
+          for dir in plugins/*/; do
+            [ -f "${dir}package.json" ] && npm install --prefix "$dir" && npm run build --prefix "$dir"
+          done
+
       - name: Install Quartz plugins
         # --from-config (not plain `plugin install`) so the local ./plugins/* are
         # resolved from quartz.config.default.yaml. They are intentionally NOT in the
@@ -91,7 +100,7 @@ jobs:
         run: npx quartz plugin install --from-config
 
       - name: Build site
-        run: npx quartz build # links/builds local ./plugins/* and emits to public/
+        run: npx quartz build # emits to public/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
