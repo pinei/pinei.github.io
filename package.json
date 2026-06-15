@@ -13,6 +13,8 @@
   },
   "scripts": {
     "quartz": "./quartz/bootstrap-cli.mjs",
+    "serve": "npx quartz plugin install --from-config && npx quartz build --serve",
+    "serve:clean": "rm -rf .quartz && npx quartz plugin install --from-config && npx quartz build --serve",
     "docs": "npx quartz build --serve -d docs",
     "check": "tsc --noEmit && npx prettier . --check",
     "format": "npx prettier . --write",
