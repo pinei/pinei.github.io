@@ -1,13 +1,14 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: Quartz 5
+  pageTitle: a digital garden
   pageTitleSuffix: ""
   enableSPA: true
   enablePopovers: true
   analytics:
-    provider: plausible
+    provider: goatcounter
+    websiteId: pinei
   locale: en-US
-  baseUrl: quartz.jzhao.xyz
+  baseUrl: pinei.github.io
   ignorePatterns:
     - private
     - templates
@@ -17,7 +18,7 @@ configuration:
     cdnCaching: true
     typography:
       header: Schibsted Grotesk
-      body: Source Sans Pro
+      body: Inconsolata
       code: IBM Plex Mono
     colors:
       lightMode:
@@ -100,6 +101,12 @@ plugins:
     order: 92
   - source: github:quartz-community/fonts
     enabled: true
+    # @hortus the v5 fonts plugin is decoupled from theme.typography and overrides
+    # --bodyFont/--headerFont/--codeFont, so the article font must be set here too.
+    options:
+      header: Schibsted Grotesk
+      body: Inconsolata
+      code: IBM Plex Mono
   - source: github:quartz-community/remove-draft
     enabled: true
   - source: github:quartz-community/explicit-publish
@@ -130,8 +137,9 @@ plugins:
     layout:
       position: left
       priority: 50
+  # @hortus Graph disabled — replaced by the Meta panel on the right
   - source: github:quartz-community/graph
-    enabled: true
+    enabled: false
     layout:
       position: right
       priority: 10
@@ -253,6 +261,27 @@ plugins:
       position: afterBody
       priority: 50
       display: all
+  # ───────────────────────────────────────────────────────────────────
+  # @hortus local in-repo plugins (symlinked + built on first `npx quartz build`)
+  # ───────────────────────────────────────────────────────────────────
+  - source: ./plugins/logo
+    enabled: true
+    layout:
+      position: left
+      priority: 5
+  - source: ./plugins/meta
+    enabled: true
+    layout:
+      position: right
+      priority: 10
+  - source: ./plugins/page-views
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 21
+  - source: ./plugins/carousel
+    enabled: true
+    order: 35
 layout:
   groups:
     toolbar:
