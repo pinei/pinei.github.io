@@ -11,3 +11,7 @@ private/
 replit.nix
 .quartz/
 quartz/cli/tui/dist/
+
+# @hortus local plugin build artifacts (Quartz rebuilds these on install).
+# Remove this line if you prefer to commit prebuilt dist/ for faster installs.
+plugins/*/dist/

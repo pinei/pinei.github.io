@@ -1,0 +1,98 @@
+# @hortus Deploy the digital garden (Quartz v5) to GitHub Pages.
+# Triggered on push to the deploy branch (and manually). On each run it pulls the
+# latest content submodule, fetches/builds the Quartz plugins, builds the site, and
+# publishes it to GitHub Pages.
+name: Deploy Quartz site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - v5 # ← your deploy branch. Change if you rename it (e.g. to "main").
+  # Auto-deploy when the content repo pushes (sent by quartz-content's notify workflow).
+  repository_dispatch:
+    types: [content-update]
+  workflow_dispatch: # allow manual runs from the Actions tab
+
+# Least-privilege token. pages/id-token are required by the GitHub Pages deploy action.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two Pages deploys at once; let an in-progress deploy finish.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (with private content submodule)
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # full history — the created-modified-date plugin reads git dates
+          submodules: recursive # clone the content/ submodule
+          # The content repo (pinei/quartz-content) is PRIVATE, so the default
+          # GITHUB_TOKEN can't read it. PAT_TOKEN is a secret holding a token with
+          # read access to that repo. checkout uses it for HTTPS submodule auth too.
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Pull latest content
+        run: |
+          git submodule update --remote --recursive
+          git submodule status
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version # single source of truth (matches local dev)
+
+      # Cache npm's download store so `npm ci` is fast on repeat runs.
+      - name: Cache npm
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      # Cache the fetched community plugins (~40 repos) so they aren't re-cloned each
+      # run. Keyed on the lockfile so it invalidates when plugin versions change.
+      # Local ./plugins/* are symlinked fresh each build (and self-heal if stale).
+      - name: Cache Quartz plugins
+        uses: actions/cache@v5
+        with:
+          path: .quartz/plugins
+          key: ${{ runner.os }}-quartz-plugins-${{ hashFiles('quartz.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-quartz-plugins-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Quartz plugins
+        # --from-config (not plain `plugin install`) so the local ./plugins/* are
+        # resolved from quartz.config.default.yaml. They are intentionally NOT in the
+        # committed quartz.lock.json (their resolved path is environment-specific), so a
+        # plain install would leave them unresolved and the build would fail.
+        run: npx quartz plugin install --from-config
+
+      - name: Build site
+        run: npx quartz build # links/builds local ./plugins/* and emits to public/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
