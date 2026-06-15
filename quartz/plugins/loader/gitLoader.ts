@@ -429,7 +429,11 @@ export async function installPlugin(
       try {
         const stat = fs.lstatSync(pluginDir)
         if (stat.isSymbolicLink() && fs.realpathSync(pluginDir) === fs.realpathSync(spec.repo)) {
-          if (options.verbose) {
+          // Build dist/ if missing — happens in CI where local plugins are gitignored
+          const distDir = path.join(pluginDir, "dist")
+          if (!fs.existsSync(distDir)) {
+            buildInstalledPlugin(pluginDir, spec.name, options.verbose)
+          } else if (options.verbose) {
             console.log(styleText("cyan", `→`), `Plugin ${spec.name} already linked`)
           }
           return { pluginDir, nativeDeps: collectNativeDeps(pluginDir) }
@@ -463,6 +467,12 @@ export async function installPlugin(
 
     if (options.verbose) {
       console.log(styleText("green", `✓`), `Linked ${spec.name}`)
+    }
+
+    // Build dist/ if missing — local plugins are gitignored so dist/ must be built
+    const distDir = path.join(pluginDir, "dist")
+    if (!fs.existsSync(distDir)) {
+      buildInstalledPlugin(pluginDir, spec.name, options.verbose)
     }
 
     return { pluginDir, nativeDeps: collectNativeDeps(pluginDir) }

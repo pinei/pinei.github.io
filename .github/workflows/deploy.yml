@@ -68,6 +68,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-quartz-plugins-
 
+      # Cache local plugin builds (dist/ and node_modules) so tsup doesn't run every push.
+      # Keyed on the plugin source files; invalidates when any plugin changes.
+      - name: Cache local plugin builds
+        uses: actions/cache@v5
+        with:
+          path: |
+            plugins/*/dist
+            plugins/*/node_modules
+          key: ${{ runner.os }}-local-plugins-${{ hashFiles('plugins/**') }}
+          restore-keys: |
+            ${{ runner.os }}-local-plugins-
+
       - name: Install dependencies
         run: npm ci
 
