@@ -1,0 +1,49 @@
+{
+  "name": "@hortus/quartz-plugin-logo",
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@quartz-community/types": "github:quartz-community/types"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "devDependencies": {
+    "preact": "^10.28.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  },
+  "quartz": {
+    "name": "logo",
+    "displayName": "Hortus Logo",
+    "description": "Hortus brand logo (leaf wordmark) for the sidebar.",
+    "version": "1.0.0",
+    "category": "component",
+    "quartzVersion": ">=5.0.0",
+    "defaultEnabled": true,
+    "components": {
+      "Logo": {
+        "displayName": "Logo",
+        "description": "Hortus brand logo rendered above the page title.",
+        "defaultPosition": "left",
+        "defaultPriority": 5
+      }
+    }
+  }
+}

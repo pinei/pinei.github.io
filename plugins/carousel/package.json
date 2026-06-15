@@ -1,0 +1,35 @@
+{
+  "name": "@hortus/quartz-plugin-carousel",
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@quartz-community/types": "github:quartz-community/types",
+    "unist-util-visit": "^5.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  },
+  "quartz": {
+    "name": "carousel",
+    "displayName": "Hortus Carousel",
+    "description": "Transforms <Carousel>...</Carousel> blocks into an image carousel with dots, keyboard/touch navigation and a fullscreen modal.",
+    "version": "1.0.0",
+    "category": "transformer",
+    "quartzVersion": ">=5.0.0",
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "showDots": true
+    }
+  }
+}

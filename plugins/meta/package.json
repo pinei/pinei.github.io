@@ -1,0 +1,52 @@
+{
+  "name": "@hortus/quartz-plugin-meta",
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@quartz-community/types": "github:quartz-community/types"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "devDependencies": {
+    "preact": "^10.28.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  },
+  "quartz": {
+    "name": "meta",
+    "displayName": "Hortus Meta",
+    "description": "Right-sidebar panel listing selected frontmatter attributes with i18n labels and value translations.",
+    "version": "1.0.0",
+    "category": "component",
+    "quartzVersion": ">=5.0.0",
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "attributes": ["lang", "style", "published", "forecast", "source", "website", "maturity"]
+    },
+    "components": {
+      "Meta": {
+        "displayName": "Meta",
+        "description": "Frontmatter metadata panel.",
+        "defaultPosition": "right",
+        "defaultPriority": 10
+      }
+    }
+  }
+}
