@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout (with private content submodule)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0 # full history — the created-modified-date plugin reads git dates
           submodules: recursive # clone the content/ submodule
@@ -50,7 +50,7 @@ jobs:
 
       # Cache npm's download store so `npm ci` is fast on repeat runs.
       - name: Cache npm
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -61,7 +61,7 @@ jobs:
       # run. Keyed on the lockfile so it invalidates when plugin versions change.
       # Local ./plugins/* are symlinked fresh each build (and self-heal if stale).
       - name: Cache Quartz plugins
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: .quartz/plugins
           key: ${{ runner.os }}-quartz-plugins-${{ hashFiles('quartz.lock.json') }}
@@ -71,7 +71,7 @@ jobs:
       # Cache local plugin builds (dist/ and node_modules) so tsup doesn't run every push.
       # Keyed on the plugin source files; invalidates when any plugin changes.
       - name: Cache local plugin builds
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             plugins/*/dist
@@ -103,7 +103,7 @@ jobs:
         run: npx quartz build # emits to public/
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: public
 
@@ -116,4 +116,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
